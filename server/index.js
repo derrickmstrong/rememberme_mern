@@ -11,13 +11,13 @@ dotenv.config();
 // Initialize app
 const app = express();
 
-// Setup routes path
-app.use('/posts', postsRouter)
-
 // Initial Setup
 app.use(express.json({ limit: '30mb', extended: true }));
 app.use(express.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
+
+// Setup routes path (Must come after cors())
+app.use('/posts', postsRouter)
 
 // Connect mongoDB cloud https://www.mongodb.com/cloud/atlas
 const CONNECTION_URL = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.xxbku.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
