@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getPosts, createPosts } from '../controllers/posts.js';
+import { getPosts, createPost, updatePost } from '../controllers/posts.js';
 
 // setup router
 export const postsRouter = express.Router();
@@ -9,4 +9,6 @@ export const postsRouter = express.Router();
 // get route
 postsRouter.get('/', getPosts);
 // post route
-postsRouter.post('/', createPosts);
+postsRouter.post('/', createPost);
+// update route
+postsRouter.patch('/:id', updatePost);
