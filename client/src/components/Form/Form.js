@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import useStyles from './styles';
 import FileBase from 'react-file-base64';
 import { useDispatch } from 'react-redux';
-import { createPost } from '../../store/actions/posts';
+import { createPost, updatePost } from '../../store/actions/posts';
+import { useSelector } from 'react-redux';
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const [postData, setPostData] = useState({
     creator: '',
@@ -15,15 +16,40 @@ const Form = () => {
     selectedFile: '',
   });
 
+  const post = useSelector(state =>
+    currentId ? state.posts.find(post => post._id === currentId) : null
+  );
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-      e.preventDefault()
-      dispatch(createPost(postData))
-      setPostData({})
+  useEffect(() => {
+    if (post) {
+      setPostData(post);
+    }
+    return () => {};
+  }, [post]);
+
+  const clear = () => {
+    setCurrentId(0);
+    setPostData({
+      creator: '',
+      title: '',
+      message: '',
+      tags: '',
+      selectedFile: '',
+    });
   };
 
-  const clear = () => {};
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    if (currentId === 0) {
+      dispatch(createPost(postData));
+      clear();
+    } else {
+      dispatch(updatePost(currentId, postData));
+      clear();
+    }
+  };
 
   return (
     <Paper className={classes.paper}>
@@ -64,7 +90,7 @@ const Form = () => {
           label='Tags'
           fullWidth
           value={postData.tags}
-          onChange={e => setPostData({ ...postData, tags: e.target.value })}
+          onChange={e => setPostData({ ...postData, tags: e.target.value.split(',') })}
         />
         <div className={classes.fileInput}>
           <FileBase

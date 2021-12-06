@@ -21,15 +21,28 @@ export const getPosts = () => async dispatch => {
   }
 };
 
-export const createPost = (post) => async dispatch => {
-    try {
-        const { data } = await api.createPost(post)
-        const action = {
-            type: ActionTypes.CREATE_POST,
-            payload: data
-        }
-        dispatch(action)
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+export const createPost = post => async dispatch => {
+  try {
+    const { data } = await api.createPost(post);
+    const action = {
+      type: ActionTypes.CREATE_POST,
+      payload: data,
+    };
+    dispatch(action);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const updatePost = (id, post) => async dispatch => {
+  try {
+    const { data } = await api.updatePost(id, post);
+    const action = {
+      type: ActionTypes.UPDATE_POST,
+      payload: data,
+    };
+    dispatch(action);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
